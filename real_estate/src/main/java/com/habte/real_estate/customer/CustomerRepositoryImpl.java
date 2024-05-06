@@ -1,4 +1,4 @@
-package com.habte.real_estate.customer.repository;
+package com.habte.real_estate.customer;
 
 public class CustomerRepositoryImpl implements CustomerRepository {
 

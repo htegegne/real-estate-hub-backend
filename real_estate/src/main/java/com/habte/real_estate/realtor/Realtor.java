@@ -1,19 +1,25 @@
-package com.habte.real_estate.realtor.model;
+package com.habte.real_estate.realtor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-import com.habte.real_estate.property.model.Property;
-import com.habte.real_estate.realtor.dto.AddressDTO;
-import com.habte.real_estate.realtor.dto.RealtorDTO;
+import org.hibernate.annotations.Cascade;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.habte.real_estate.property.Property;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
@@ -22,7 +28,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Realtor {
+public class Realtor implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
@@ -45,12 +51,57 @@ public class Realtor {
 	@NotEmpty(message="{customer.password.must}")
 	private String password;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	
 	@JoinColumn(name = "address_id")
 	private Address realtorAddress;
+	
+	@JsonBackReference
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "realtor")
 	private List<Property> properties;
 	
+	
+
+	public Realtor() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Realtor( String firstName,
+			 String lastName,
+			 String emailId,
+		 String phoneNumber,
+			 String password, 
+			 Address realtorAddress,
+			List<Property> properties) {
+		super();
+		
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = emailId;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
+		this.realtorAddress = realtorAddress;
+		this.properties = properties;
+	}
+	public Realtor(Integer realtorId, String firstName,
+			 String lastName,
+			 String emailId,
+		 String phoneNumber,
+			 String password, 
+			 Address realtorAddress,
+			List<Property> properties) {
+		super();
+		this.realtorId = realtorId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = emailId;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
+		this.realtorAddress = realtorAddress;
+		this.properties = properties;
+	}
 	
 
 	/**
@@ -187,28 +238,30 @@ public class Realtor {
 
 	@Override
 	public String toString() {
-		return "Realtor [realtorID=" + realtorId + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId="
+		return "Realtor [realtorIdEntity=" + realtorId + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId="
 				+ emailId + ", phoneNumber=" + phoneNumber + ", password=" + password + ", properties=" + properties
 				+ ", realtorAddress=" + realtorAddress + "]";
 	}
+	public static RealtorDTO convertToRealtorDTO(Realtor realtor) {
+        RealtorDTO realtorDTO = new RealtorDTO();
+        realtorDTO.setRealtorID(realtor.getRealtorID());
+        realtorDTO.setFirstName(realtor.getFirstName());
+        realtorDTO.setLastName(realtor.getLastName());
+        realtorDTO.setEmailId(realtor.getEmailId());
+        realtorDTO.setPhoneNumber(realtor.getPhoneNumber());
+        realtorDTO.setPassword(realtor.getPassword());
+        realtorDTO.setProperties(realtor.getProperties());
+        realtorDTO.setRealtorAddress(realtor.getRealtorAddress()); // Set empty AddressDTO if address is null
+        return realtorDTO;
+    }
+
 	
-	// You may need to implement a method to convert RealtorDTO to Realtor entity
-		 	public static Realtor convertToRealtorEntity(RealtorDTO realtorDTO) {
-	        Realtor realtor = new Realtor();
-	        realtor.setFirstName(realtorDTO.getFirstName());
-	        realtor.setLastName(realtorDTO.getLastName());
-	        realtor.setEmailId(realtorDTO.getEmailId());
-	        realtor.setPhoneNumber(realtorDTO.getPhoneNumber());
-	        realtor.setPassword(realtorDTO.getPassword());
-
-	        // Convert AddressDTO to Address entity
-	       Address address = realtor.getRealtorAddress();
-	       // Address address = Address.convertToAddressEntity(realtor.getRealtorAddress());
-	        realtor.setRealtorAddress(address);
-
-	        // Set other properties as needed
-
-	        return realtor;
-	    	}
+//	public static List<RealtorDTO> convertToRealtorDTOList(List<Realtor> realtors) {
+//        return realtors.stream()
+//                .map(RealtorDTO::convertToRealtorDTO)
+//                .collect(Collectors.toList());
+//    }
+	
+	
 	
 }

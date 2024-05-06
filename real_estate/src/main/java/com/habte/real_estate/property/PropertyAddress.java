@@ -1,20 +1,29 @@
-package com.habte.real_estate.property.model;
+package com.habte.real_estate.property;
 
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "property_address")
 public class PropertyAddress {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name ="property_address_id")
 	private Integer addressId;
 	
+	@Column(name = "sub_city")
 	private String subCity;
 	private String district;
+	@Column(name = "house_number")
 	private String houseNo;
+	@Column(name = "block_name")
 	private String blockName;
 	/**
 	 * @return the addressId

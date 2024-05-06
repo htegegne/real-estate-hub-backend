@@ -1,9 +1,7 @@
-package com.habte.real_estate.realtor.dto;
+package com.habte.real_estate.realtor;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.habte.real_estate.realtor.model.Address;
 
 public class AddressDTO {
 
@@ -65,21 +63,23 @@ public class AddressDTO {
 		return "AddressDTO [addressId=" + addressId + ", subCity=" + subCity + ", district=" + district + ", houseNo="
 				+ houseNo + "]";
 	}
+	public static Address convertToAddressEntity(AddressDTO addressDTO) {
+        Address address = new Address(
+        		addressDTO.getSubCity(),
+        		addressDTO.getDistrict(),
+        		addressDTO.getHouseNo());
+       // address.setSubCity(addressDTO.getSubCity());
+      //  address.setDistrict(addressDTO.getDistrict());
+      //  address.setHouseNo(addressDTO.getHouseNo());
+
+        // Set other properties as needed
+
+        return address;
+		}
 	
-	 public static AddressDTO convertToAddressDTO(Address address) {
-	        AddressDTO addressDTO = new AddressDTO();
-	        addressDTO.setAddressId(address.getAddressId());
-	        addressDTO.setSubCity(address.getSubCity());
-	        addressDTO.setDistrict(address.getDistrict());
-	        addressDTO.setHouseNo(address.getHouseNo());
-
-	        // Set other properties as needed
-
-	        return addressDTO;
-	    }
-	 public static List<AddressDTO> convertToAddressDTOList(List<Address> addresses) {
-	        return addresses.stream()
-	                .map(AddressDTO::convertToAddressDTO)
-	                .collect(Collectors.toList());
-	    }
+//	 public static List<AddressDTO> convertToAddressDTOList(List<Address> addresses) {
+//	        return addresses.stream()
+//	                .map(AddressDTO::convertToAddressDTO)
+//	                .collect(Collectors.toList());
+//	    }
 }

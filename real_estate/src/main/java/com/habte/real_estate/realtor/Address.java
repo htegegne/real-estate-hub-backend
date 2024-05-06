@@ -1,19 +1,22 @@
-package com.habte.real_estate.realtor.model;
+package com.habte.real_estate.realtor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-import com.habte.real_estate.realtor.dto.AddressDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "address")
-public class Address {
+
+public class Address implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +29,30 @@ public class Address {
 	@Column(name = "house_number")
 	private String houseNo;
 	// add id photo
+	
+	
 	public Integer getAddressId() {
 		return addressId;
+	}
+	
+	public Address(Integer addressId, String subCity, String district, String houseNo) {
+		super();
+		this.addressId = addressId;
+		this.subCity = subCity;
+		this.district = district;
+		this.houseNo = houseNo;
+	}
+
+	public Address() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Address(String subCity, String district, String houseNo) {
+		super();
+		this.subCity = subCity;
+		this.district = district;
+		this.houseNo = houseNo;
 	}
 	public void setAddressId(Integer addressId) {
 		this.addressId = addressId;
@@ -72,15 +97,16 @@ public class Address {
 				+ houseNo + "]";
 	}
 	
+	 public static AddressDTO convertToAddressDTO(Address address) {
+	        AddressDTO addressDTO = new AddressDTO();
+	        addressDTO.setAddressId(address.getAddressId());
+	        addressDTO.setSubCity(address.getSubCity());
+	        addressDTO.setDistrict(address.getDistrict());
+	        addressDTO.setHouseNo(address.getHouseNo());
+
+	        // Set other properties as needed
+
+	        return addressDTO;
+	    }
 	
-	public static Address convertToAddressEntity(AddressDTO addressDTO) {
-        Address address = new Address();
-        address.setSubCity(addressDTO.getSubCity());
-        address.setDistrict(addressDTO.getDistrict());
-        address.setHouseNo(addressDTO.getHouseNo());
-
-        // Set other properties as needed
-
-        return address;
-		}
 }
